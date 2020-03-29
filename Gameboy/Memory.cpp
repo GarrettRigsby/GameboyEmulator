@@ -256,6 +256,7 @@ void Memory::loadROM(const char* filePath)
 // Read a single byte from Memory
 BIT8 Memory::readByte(BIT16 location)
 {
+	printf("Memory.readByte(%02X)\n", location);
 	return ROM[location];
 }
 

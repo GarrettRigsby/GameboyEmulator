@@ -37,3 +37,5 @@
 # Debug/Release Directories
 */Debug
 */Release
+Debug/
+Release/

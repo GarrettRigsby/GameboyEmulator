@@ -15,11 +15,22 @@ public:
 	void setProgramCounter(BIT16 val);
 	void putPCOnStack();
 
-	void printRegisters();
-
 	// Interrupt Master Enable
 	void setIme(bool interrupt);
 	bool getIme();
+
+	// Get Registers
+	void printRegisters();
+	BIT8 getA();
+	BIT8 getF();
+	BIT8 getB();
+	BIT8 getC();
+	BIT8 getD();
+	BIT8 getE();
+	BIT8 getH();
+	BIT8 getL();
+	BIT16 getPC();
+	BIT16 getSP();
 
 	/*
 		void setHalt(bool halt);
@@ -56,6 +67,7 @@ private:
 	BIT16 getAF();
 	BIT16 getBC();
 	BIT16 getDE();
+	
 
 	// Define Flags to use
 	const struct {

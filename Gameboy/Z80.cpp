@@ -86,8 +86,9 @@ Z80::Z80(Memory* memory)
 
 // Destructor
 Z80::~Z80() {
-	delete[] instructionSet;
-	delete[] cbInstructionSet;
+	// TODO: This was causing an exception in my UnitTests. Need to figure out why. Is this code not correct?
+	//delete[] instructionSet;
+	//delete[] cbInstructionSet;
 }
 
 
@@ -125,6 +126,38 @@ void Z80::putPCOnStack()
 {
 	pMemory->writeByte(--registers.SP, (registers.PC>>8));
 	pMemory->writeByte(--registers.SP, (registers.PC&0xFF));
+}
+
+
+BIT8 Z80::getA(){
+	return registers.A;
+}
+BIT8 Z80::getF() {
+	return registers.F;
+}
+BIT8 Z80::getB() {
+	return registers.B;
+}
+BIT8 Z80::getC() {
+	return registers.C;
+}
+BIT8 Z80::getD() {
+	return registers.D;
+}
+BIT8 Z80::getE() {
+	return registers.E;
+}
+BIT8 Z80::getH() {
+	return registers.H;
+}
+BIT8 Z80::getL() {
+	return registers.L;
+}
+BIT16 Z80::getPC() {
+	return registers.PC;
+}
+BIT16 Z80::getSP() {
+	return registers.SP;
 }
 
 
@@ -900,7 +933,7 @@ void Z80::daa() {
 	registers.F |= (i == 0) ? flags.Z : 0;
 	registers.F &= ~(flags.H);
 
-	registers.A = i;
+	registers.A = (BIT8)i;
 	cpuClockCycles = 4;
 }
 
@@ -951,7 +984,7 @@ void Z80::ccf() {
 */
 void Z80::add(BIT8 X) {
 	BIT16 i = registers.A + X;
-	registers.F |= (i & 0xFF == 0) ? flags.Z : 0;							// Set Z
+	registers.F |= ((i&0xFF) == 0) ? flags.Z : 0;							// Set Z
 	registers.F &= ~flags.N;												// Set N (0)
 	registers.F |= ((X &0x0F) + (registers.A &0x0F) > 0x0F) ? flags.H : 0;	// Set H
 	registers.F |= (i > 0xFF) ? flags.C : 0;								// Set C
@@ -999,7 +1032,7 @@ void Z80::adcn() {
 */
 void Z80::sub(BIT8 X) {
 	BIT16 i = registers.A - X;
-	registers.F |= ((i & 0xFF) & 0xFF == 0) ? flags.Z : 0;			// Set Z
+	registers.F |= ((i & 0xFF) == 0) ? flags.Z : 0;					// Set Z
 	registers.F |= flags.N;											// Set N(1)
 	registers.F |= ((X &0x0F) > (registers.A &0x0F)) ? flags.H : 0;	// Set H
 	registers.F |= (X > registers.A) ? flags.C : 0;					// Set C
@@ -1116,7 +1149,7 @@ void Z80::orn() {
 */
 void Z80::cp(BIT8 X) {
 	BIT16 i = registers.A - X;
-	registers.F |= ((i & 0xFF) & 0xFF == 0) ? flags.Z : 0;				// Set Z
+	registers.F |= ((i & 0xFF) == 0) ? flags.Z : 0;				// Set Z
 	registers.F |= flags.N;												// Set N(1)
 	registers.F |= ((X & 0x0F) > (registers.A & 0x0F)) ? flags.H : 0;	// Set H
 	registers.F |= (X > registers.A) ? flags.C : 0;						// Set C

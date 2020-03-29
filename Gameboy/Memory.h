@@ -16,7 +16,7 @@ public:
 
 private:
 	BIT8* BOOT_ROM;
-	BIT8* ROM;
+	BIT8* ROM = new BIT8[65536]; // Set default value. Necessary for units tests to work properly.
 
 	void setInitRegisters();
 	void lyc();
